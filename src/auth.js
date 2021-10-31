@@ -11,7 +11,7 @@ const loginFunction = (config = {}) => async (req, res) => {
         "client_id=" +
         config.clientId +
         "&redirect_uri=" +
-        config.redirectUri +
+        config.baseUrl + '/callback' +
         "&state=" +
         state +
         "&bindid_custom_message=" +
@@ -26,7 +26,7 @@ const loginFunction = (config = {}) => async (req, res) => {
 const callbackFunction = (config = {}) => async (req, res) => {
     try {
         if (req.query.state != req.session.state) {
-            return res.status(403).data("Invalid State, try again").redirect('./login');
+            return res.status(403).redirect('./login');
         }
         const params = new URLSearchParams();
         params.append("grant_type", "authorization_code");

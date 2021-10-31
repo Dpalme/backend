@@ -1,7 +1,7 @@
 const session = require("express-session"),
     MemoryStore = require("memorystore")(session);
 
-module.exports.default = () => session({
+module.exports = session({
     store: new MemoryStore({
         checkPeriod: 1000 * 60 * 60 * 2,
         ttl: 1000 * 60 * 30
