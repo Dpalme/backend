@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const PlaylistSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.OnjectId,
+    _id: mongoose.Schema.Types.ObjectId,
     title: {
         type: [String, "Error 422: InvalidBodyException.	Field must be string"],
         maxLength: [50, "Error 422: InvalidBodyException. Title must be between 5 and 50 characters"],
