@@ -9,4 +9,11 @@ router.route('/playlist/:id')
     .put(put)
     .delete(del)
 
+router.route('/playlist')
+    .all(requiresAuth)
+    .post(post)
+    .get(get)
+    .put(put)
+    .delete(del)
+
 module.exports = router

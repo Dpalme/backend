@@ -9,4 +9,11 @@ router.route('/media/:id')
     .put(put)
     .delete(del)
 
+router.route('/media')
+    .all(requiresAuth)
+    .post(post)
+    .get(get)
+    .put(put)
+    .delete(del)
+
 module.exports = router
