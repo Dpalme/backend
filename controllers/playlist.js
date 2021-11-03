@@ -8,17 +8,17 @@ module.exports = {
         if (req.body.itemId) {
             Playlist.findById(req.params.id, (err, playlist) => {
                 if (err) {
-                    return res.status(422).json({ status: 422, message: data, error1: err });
+                    return res.status(422).json({ status: 422, message: data, error: err });
                 }
                 Media.findById(req.body.itemId, (errm, media) => {
                     if (err) {
-                        return res.status(422).json({ status: 422, message: media, error2: errm });
+                        return res.status(422).json({ status: 422, message: media, error: errm });
                     }
                     playlist.items.push(media._id)
                     playlist.save().then(
                         (data, err) => {
                             if (err) {
-                                return res.status(422).json({ status: 422, message: data, error3: err });
+                                return res.status(422).json({ status: 422, message: data, error: err });
                             }
                             return res.status(200).json({ status: 200, items: data });
                         }
