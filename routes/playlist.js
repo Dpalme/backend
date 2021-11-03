@@ -1,10 +1,10 @@
 const router = require("express").Router();
 const { requiresAuth } = require("./auth.js");
-const { post, get, put, del } = require("../controllers/playlist.js");
+const { post, get, put, del, addItem } = require("../controllers/playlist.js");
 
 router.route('/playlist/:id')
     .all(requiresAuth)
-    .post(post)
+    .post(addItem)
     .get(get)
     .put(put)
     .delete(del)

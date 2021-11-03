@@ -1,112 +1,136 @@
-Diego Palmerín Bonada A01747290
+# Backend
+CLI only playlists for books and songs
+## Authors
+* Diego Palmerín Bonada A01747290
+* Zoe Caballero Domínguez A01747247
 
-Zoe Caballero Domínguez A01747247
-
+##Methods
 ### Post
 Crea un nuevo documento en la base de datos.
 
-**Endpoint:** "/playlist" o "/media"
 
-**Método:** POST
+####Playlist:
 
-**Body**
-
-
-Para Playlist:
+#####Crear Playlist
+**path**: `/playlist`
+**body**:
+```
 {
-    "name":"Nombre Playlist",
-    "owner": "User"
-    "privacy": "Public"
-    "description": "This is a playlist"
-    "items": "[001, 002, 003]"
+    name: "Nombre Playlist",
+    privacy: "Public",
+    description: "This is a playlist"
 }
+```
 
-Para Media:
+#####Agregar media a playlist
+**path**: `/playlist/idPlaylist`
+**body**:
+```
 {
-    "name": "Hamlet"
-    "type": "Book"
-    "author": "Shakespeare"
-    "description": "Drama Play. Everyone dies"
+    itemId: "id de documento"
 }
+```
 
-**Validaciones**
+#####Crear Media y agregarlo a playlist
+**path**: `/playlist/idPlaylist`
+**body**:
+```
+{
+    name: "Hamlet"
+    type: "Book",
+    privacy: "Private",
+    author: "Shakespeare"
+    description: "Drama Play. Everyone dies"
+}
+```
 
-***Playlist***
 
-Name: Name must be string. Name must be between 5 and 50 characters.
+####Media:
+```
+{
+    name: "Hamlet"
+    type: "Book",
+    privacy: "Private",
+    author: "Shakespeare"
+    description: "Drama Play. Everyone dies"
+}
+```
 
-Owner: Must be a valid owner.
+####Validaciones
 
-Privacy: Value can only be "Public" or "Private".
+#####Playlist
 
-Description: Description must be between 10 and 250 characters.
+`name`: Name must be string. Name must be between 5 and 50 characters.
 
-***Media***
+`privacy`: Value can only be "Public" or "Private".
 
-Name: Name must be string. Name must be between 5 and 50 characters.
+`description`: Description must be between 10 and 250 characters.
 
-Type: Value can only be "Book" or "Song".
+#####Media
 
-Author: Must be string. Must be between 5 and 50 characters.
+`name`: Name must be string. Name must be between 5 and 50 characters.
 
-Description: Description must be between 10 and 250 characters.
+`type`: Value can only be "Book" or "Song".
+
+`privacy`: Value can only be "Public" or "Private".
+
+`author`: Must be string. Must be between 5 and 50 characters.
+
+`description`: Description must be between 10 and 250 characters.
 
 
 
 ### Get
 Regresa los datos registrados en la base de datos. La persona usuaria puede mandar un id en específico.
 
-**Endpoint:** "/playlist" o "/media"
+**path**: `/playlist`
 
-**Método:** GET
+Sin ningún otro argumento, regresa todas las playlists asociadas con la sesión actual o públicas
 
-**Body**
-
+Igualmente, puede recibir un id en el cuerpo
+**body**
+```
 {
-    "id":"1234567"
+    id: "1234567"
 }
+```
+
+**URL params**
+`/playlist/id`
 
 **Validaciones**
 
-Id: que el id se encuentre en la base de datos.
+`id`: que el id se encuentre en la base de datos.
 
-Usuario: que la información sea de la persona usuaria actual.
+Dependiendo de la privacidad, se permitirá o no el acceso a esta información
 
 ### Put
 Actualiza la información de un documento dado. 
 
-**Endpoint:** "/playlist" o "/media"
-
-**Método:** PUT
-
-**Body**
-
+**path**: `/playlist` o `/media`
+**body**
+```
 {
-    "id":"1234567",
-    "name":"New Name"
+    id: "1234567",
+    name: "New Name"
 }
+```
 
-**Validaciones**
+####Validaciones
 
-Id: que el id se encuentre en la base de datos.
+`id`: que el id se encuentre en la base de datos.
+datos: que sean del tipo correcto y cumplan con sus limitaciones
 
-Usuario: que la información sea de la persona usuaria actual.
-
-### Del
+###Delete
 Elimina el documento que tiene el id mandado por la persona usuaria.
 
-**Endpoint:** "/playlist" o "/media"
-
-**Método:** DEL
-
-**Body**
-
+**path**: `/playlist` o `/media`
+**body**
+```
 {
-    "id":"1234567"
+    id: "1234567"
 }
+```
 
 **Validaciones**
-Id: que el id se encuentre en la base de datos.
-
-Usuario: que la información sea de la persona usuaria actual.
-
+`id`: que el id se encuentre en la base de datos.

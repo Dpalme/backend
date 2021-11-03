@@ -1,28 +1,14 @@
-    verifyUser = (callback) => {
-        (err, data) => {
-            if (err) {
-                return res.status(422).json({ status: 422, message: err });
-            }
-            if (data.owner == req.session.userid) {
-                callback(err, data)
-            } else {
-                return res.status(503).json({ status: 503, message: 'not your data' });
-            }
-        }
-    }
-
 module.exports = {
-    verifyUser,
     createController: (Model) => {
         return {
             post: async (req, res) => {
-                req.body.owner = req.session.userid;
+                req.body.owner = req.sessionID;
                 new Model(req.body)
                     .save()
                     .then(
-                        (err, data) => {
+                        async (data, err) => {
                             if (err) {
-                                return res.status(422).json({ status: 422, message: err });
+                                return res.status(422).json({ status: 422, message: data, error: err });
                             }
                             return res.status(200).json({ status: 200, items: data });
                         }
@@ -30,14 +16,14 @@ module.exports = {
             },
 
             get: async (req, res) => {
-                if (req.params.id) {
+                if (req.params.id || req.body.id) {
                     Model.findById(
-                        req.params.id,
-                        (err, data) => {
+                        req.params.id || req.body.id,
+                        async (data, err) => {
                             if (err) {
-                                return res.status(422).json({ status: 422, message: err });
+                                return res.status(422).json({ status: 422, message: data, error: err });
                             }
-                            if (data.owner == req.session.userid) {
+                            if (data.owner == req.sessionID || data.privacy == 'Public') {
                                 return res.status(200).json({ status: 200, items: data });
                             } else {
                                 return res.status(503).json({ status: 503, message: 'not your data' });
@@ -45,9 +31,9 @@ module.exports = {
                         }
                     )
                 } else {
-                    Model.find({ owner: req.session.userid }, (err, data) => {
+                    Model.find({ owner: req.sessionID }, async (err, data) => {
                         if (err) {
-                            return res.status(422).json({ status: 422, message: err });
+                            return res.status(422).json({ status: 422, message: data, error: err });
                         }
                         return res.status(200).json({ status: 200, items: data });
                     })
@@ -57,12 +43,12 @@ module.exports = {
             put: async (req, res) => {
                 Model.findOneById(
                     req.params.id || req.body.id,
-                    (err, data) => {
+                    async (data, err) => {
                         if (err) {
-                            return res.status(422).json({ status: 422, message: err });
+                            return res.status(422).json({ status: 422, message: data, error: err });
                         }
-                        if (data.owner == req.session.userid) {
-                            data.update(req.body, (err, data) => {
+                        if (data.owner == req.sessionID || data.privacy == 'Public') {
+                            data.update(req.body, async (data, err) => {
                                 if (err) {
                                     return res.status(422).json({ status: 422, message: err });
                                 }
@@ -78,14 +64,14 @@ module.exports = {
             del: async (req, res) => {
                 Model.findById(
                     req.params.id || req.body.id,
-                    (err, data) => {
+                    async (data, err) => {
                         if (err) {
-                            return res.status(422).json({ status: 422, message: err });
+                            return res.status(422).json({ status: 422, message: data, error: err });
                         }
-                        if (data.owner == req.session.userid) {
-                            data.remove((err, data) => {
+                        if (data.owner == req.sessionID) {
+                            data.remove(async (data, err) => {
                                 if (err) {
-                                    return res.status(422).json({ status: 422, message: err });
+                                    return res.status(422).json({ status: 422, message: data, error: err });
                                 }
                                 return res.status(200).json({ status: 200, items: data });
                             })
